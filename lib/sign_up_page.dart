@@ -26,6 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
         key: _formKey,
         child: Column(
           children: <Widget>[
+            //Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
             TextFormField(
               controller: _usernameController,
               decoration: const InputDecoration(labelText: 'Username'),

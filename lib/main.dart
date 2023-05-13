@@ -87,42 +87,69 @@ class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Home Page'),
-    );
-  }
+ 
+ Widget build(BuildContext context) {
+  return Container(
+    child: Column(
+      children: [
+        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
+        Text('Elaborado por:'), SizedBox(height: 10),Text('Cristobal Zuluaga'),Text('Leidy Estrada'),Text('Steven Caicedo'),
+      ],
+    ),
+  );
+}
+
 }
 
 class ConsultingPage extends StatelessWidget {
-  const ConsultingPage({Key? key}) : super(key: key);
+ const ConsultingPage({Key? key}) : super(key: key);
+  
+
+// const ConsultingPage({Key? key, required this.users}) : super(key: key);
+  //final List<User> users;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Consulting Page'),
-    );
-  }
+  return Container(
+    child: Column(
+      children: [
+        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
+        Text('Consultar'), SizedBox(height: 10),
+        
+      ],
+    ),
+  );
+}
 }
 
 class ModifyPage extends StatelessWidget {
   const ModifyPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Modify Page'),
-    );
-  }
+    Widget build(BuildContext context) {
+  return Container(
+    child: Column(
+      children: [
+        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
+        Text('Modificar'), SizedBox(height: 10),
+      ],
+    ),
+  );
+}
 }
 
 class DeletePage extends StatelessWidget {
   const DeletePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Delete Page'),
-    );
-  }
+    Widget build(BuildContext context) {
+  return Container(
+    child: Column(
+      children: [
+        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
+        Text('Borrar'), SizedBox(height: 10),
+      ],
+    ),
+  );
+}
 }
