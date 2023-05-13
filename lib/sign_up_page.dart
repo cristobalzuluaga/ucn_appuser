@@ -78,7 +78,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('User Registered')),
                       );
-                      _usernameController.clear();
+                         _usernameController.clear();
                     _emailController.clear();
                     _ageController.clear();
                     }
