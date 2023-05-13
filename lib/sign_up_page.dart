@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'user_model.dart';
-import 'user_list_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -74,16 +73,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 }
               },
               child: const Text('Submit'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UserListPage(users: users)),
-                );
-              },
-              child: const Text('View User List'),
             ),
           ],
         ),
