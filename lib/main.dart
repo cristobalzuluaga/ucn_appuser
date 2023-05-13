@@ -28,9 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomePage(), // Home Page
     const SignUpPage(), // Register Page
-    const ConsultingPage(), // Consulting Page
-    const ModifyPage(), // Modify Page
-    const DeletePage(), // Delete Page
+    
   ];
 
   void _onItemTapped(int index) {
@@ -63,18 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.school),
             label: 'Register',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: 'Consulting',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.contact_emergency),
-            label: 'Modify',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.delete),
-            label: 'Delete',
-          ),
+          
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -99,57 +86,4 @@ class HomePage extends StatelessWidget {
   );
 }
 
-}
-
-class ConsultingPage extends StatelessWidget {
- const ConsultingPage({Key? key}) : super(key: key);
-  
-
-// const ConsultingPage({Key? key, required this.users}) : super(key: key);
-  //final List<User> users;
-
-  @override
-  Widget build(BuildContext context) {
-  return Container(
-    child: Column(
-      children: [
-        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
-        Text('Consultar'), SizedBox(height: 10),
-        
-      ],
-    ),
-  );
-}
-}
-
-class ModifyPage extends StatelessWidget {
-  const ModifyPage({Key? key}) : super(key: key);
-
-  @override
-    Widget build(BuildContext context) {
-  return Container(
-    child: Column(
-      children: [
-        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
-        Text('Modificar'), SizedBox(height: 10),
-      ],
-    ),
-  );
-}
-}
-
-class DeletePage extends StatelessWidget {
-  const DeletePage({Key? key}) : super(key: key);
-
-  @override
-    Widget build(BuildContext context) {
-  return Container(
-    child: Column(
-      children: [
-        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
-        Text('Borrar'), SizedBox(height: 10),
-      ],
-    ),
-  );
-}
 }
