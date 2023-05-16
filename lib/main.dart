@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'sign_up_page.dart'; // import the sign_up_page
+import 'home_page.dart';
+import 'sign_up_page.dart';
+import 'users_table_page.dart';
+import 'user_model.dart';
+import 'prefs_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,25 +15,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MyHomePage(),
+      home: UsersData(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class UsersData extends StatefulWidget {
+  const UsersData({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _UsersDataState createState() => _UsersDataState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _UsersDataState extends State<UsersData> {
+  List<User> users = [];
+
   int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = <Widget>[
-    const HomePage(), // Home Page
-    const SignUpPage(), // Register Page
-    
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsers();
+  }
+
+  void loadUsers() async {
+    List<User> storedUsers = await PrefsService.retrieveUsers();
+    setState(() {
+      users = storedUsers;
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -39,16 +53,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> widgetOptions = <Widget>[
+      const HomePage(),
+      SignUpPage(users: users),
+      UsersTablePage(users: users),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text('UCN App users'),
       ),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Set the type to fixed
+        type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.blue,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
@@ -61,29 +81,14 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.school),
             label: 'Register',
           ),
-          
+          BottomNavigationBarItem(
+            icon: Icon(Icons.table_chart),
+            label: 'Users',
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
     );
   }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
- 
- Widget build(BuildContext context) {
-  return Container(
-    child: Column(
-      children: [
-        Image.network('https://www.comfenalcoantioquia.com.co/wcm/connect/11733b3f-6812-4dbe-a616-77f36c98f664/1/49.png?MOD=AJPERES'),
-        Text('Elaborado por:'), SizedBox(height: 10),Text('Cristobal Zuluaga'),Text('Leidy Estrada'),Text('Steven Caicedo'),
-      ],
-    ),
-  );
-}
-
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'user_model.dart';
+import 'prefs_service.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  final List<User> users;
+
+  const SignUpPage({Key? key, required this.users}) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -14,14 +17,13 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _ageController = TextEditingController();
 
-  List<User> users = [];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    int userCount = users.length;
-    double ageSum = users.fold(0, (sum, user) => sum + int.parse(user.age ?? '0'));
-    double ageAverage = userCount > 0 ? ageSum / userCount : 0;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign Up'),
@@ -32,7 +34,9 @@ class _SignUpPageState extends State<SignUpPage> {
           children: <Widget>[
             TextFormField(
               controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(
+                hintText: 'Username',
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your username';
@@ -42,20 +46,21 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             TextFormField(
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(
+                hintText: 'Email',
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your email';
-                }
-                if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
-                  return 'Please enter a valid email';
                 }
                 return null;
               },
             ),
             TextFormField(
               controller: _ageController,
-              decoration: const InputDecoration(labelText: 'Age'),
+              decoration: const InputDecoration(
+                hintText: 'Age',
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your age';
@@ -63,70 +68,34 @@ class _SignUpPageState extends State<SignUpPage> {
                 return null;
               },
             ),
-            Row(
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        users.add(User(
-                          username: _usernameController.text,
-                          email: _emailController.text,
-                          age: _ageController.text,
-                        ));
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('User Registered')),
-                      );
-                         _usernameController.clear();
-                    _emailController.clear();
-                    _ageController.clear();
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      users.removeWhere((user) => user.username == _usernameController.text);
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('User Deleted')),
-                    );
-                    _usernameController.clear();
-                    _emailController.clear();
-                    _ageController.clear();
-                  },
-                  child: const Text('Delete'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text('User Count: $userCount'),
-            Text('Age Average: ${ageAverage.toStringAsFixed(2)}'),
-            Text('Users:'),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final user = users[index];
-                return ListTile(
-                  title: Text('Username: ${user.username}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Email: ${user.email}'),
-                      Text('Age: ${user.age}'),
-                    ],
-                  ),
-                );
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    widget.users.add(User(
+                      username: _usernameController.text,
+                      email: _emailController.text,
+                      age: _ageController.text,
+                    ));
+                  });
+
+                  // Store updated user list in shared preferences
+                  await PrefsService.storeUsers(widget.users);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('User Registered')),
+                  );
+
+                  _usernameController.clear();
+                  _emailController.clear();
+                  _ageController.clear();
+                }
               },
+              child: const Text('Submit'),
             ),
           ],
         ),
       ),
     );
   }
-
 }
