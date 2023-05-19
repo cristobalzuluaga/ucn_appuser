@@ -19,4 +19,21 @@ class PrefsService {
     final usersList = jsonDecode(usersJson) as List;
     return usersList.map((userJson) => User.fromJson(userJson)).toList();
   }
+
+  static Future<void> deleteUser(User user) async {
+    final users = await retrieveUsers();
+    users.removeWhere(
+        (u) => u.username == user.username && u.email == user.email);
+    await storeUsers(users);
+  }
+
+  static Future<void> updateUser(User oldUser, User newUser) async {
+    final users = await retrieveUsers();
+    final index = users.indexWhere(
+        (u) => u.username == oldUser.username && u.email == oldUser.email);
+    if (index != -1) {
+      users[index] = newUser;
+      await storeUsers(users);
+    }
+  }
 }
