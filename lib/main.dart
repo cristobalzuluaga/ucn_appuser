@@ -4,6 +4,7 @@ import 'sign_up_page.dart';
 import 'users_table_page.dart';
 import 'user_model.dart';
 import 'prefs_service.dart';
+import 'global_state.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,6 +43,7 @@ class _UsersDataState extends State<UsersData> {
     List<User> storedUsers = await PrefsService.retrieveUsers();
     setState(() {
       users = storedUsers;
+      GlobalState.updateUserCountAndAvgAge(users);
     });
   }
 
@@ -60,35 +62,43 @@ class _UsersDataState extends State<UsersData> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text('UCN App users'),
-      ),
+      appBar: _buildAppBar(),
       body: Center(
         child: widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.blue,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Register',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.table_chart),
-            label: 'Users',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.blue,
+      title: const Text('UCN App users'),
+    );
+  }
+
+  BottomNavigationBar _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: Colors.blue,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white70,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.school),
+          label: 'Register',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.table_chart),
+          label: 'Users',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
     );
   }
 }

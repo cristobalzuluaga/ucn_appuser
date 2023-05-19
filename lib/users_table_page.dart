@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'prefs_service.dart';
 import 'user_model.dart';
+import 'global_state.dart';
 
 class UsersTablePage extends StatefulWidget {
   final List<User> users;
@@ -18,7 +19,31 @@ class _UsersTablePageState extends State<UsersTablePage> {
       appBar: AppBar(
         title: const Text('User Table'),
       ),
-      body: Align(
+      body: Column(
+        children: [
+          _buildStatsSection(),
+          _buildTable(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsSection() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('User count: ${GlobalState.userCount}'),
+          Text('Average age: ${GlobalState.avgAge.toStringAsFixed(2)}'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTable() {
+    return Expanded(
+      child: Align(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -82,40 +107,42 @@ class _UsersTablePageState extends State<UsersTablePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Edit User'),
+          title: const Text('Edit User'),
           content: Column(
             children: <Widget>[
               TextField(
                 controller: usernameController,
-                decoration: InputDecoration(hintText: 'Username'),
+                decoration: const InputDecoration(hintText: 'Username'),
               ),
               TextField(
                 controller: emailController,
-                decoration: InputDecoration(hintText: 'Email'),
+                decoration: const InputDecoration(hintText: 'Email'),
               ),
               TextField(
                 controller: ageController,
-                decoration: InputDecoration(hintText: 'Age'),
+                decoration: const InputDecoration(hintText: 'Age'),
               ),
             ],
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Delete'),
+              child: const Text('Delete'),
               onPressed: () async {
                 widget.users.remove(user);
                 await PrefsService.storeUsers(widget.users);
+                GlobalState.updateUserCountAndAvgAge(widget.users);
                 setState(() {});
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Save'),
+              child: const Text('Save'),
               onPressed: () async {
                 user.username = usernameController.text;
                 user.email = emailController.text;
                 user.age = ageController.text;
                 await PrefsService.storeUsers(widget.users);
+                GlobalState.updateUserCountAndAvgAge(widget.users);
                 setState(() {});
                 Navigator.of(context).pop();
               },
