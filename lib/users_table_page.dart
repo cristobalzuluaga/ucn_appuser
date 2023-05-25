@@ -67,31 +67,45 @@ class _UsersTablePageState extends State<UsersTablePage> {
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
+              DataColumn(
+                // Nueva columna para "Interest"
+                label: Text(
+                  'Interest',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
             ],
-            rows: widget.users
-                .map((User user) => DataRow(
-                      cells: <DataCell>[
-                        DataCell(
-                          Text(user.username),
-                          onTap: () {
-                            _showEditDialog(context, user);
-                          },
-                        ),
-                        DataCell(
-                          Text(user.email),
-                          onTap: () {
-                            _showEditDialog(context, user);
-                          },
-                        ),
-                        DataCell(
-                          Text(user.age),
-                          onTap: () {
-                            _showEditDialog(context, user);
-                          },
-                        ),
-                      ],
-                    ))
-                .toList(),
+            rows: widget.users.map((User user) {
+              return DataRow(
+                cells: <DataCell>[
+                  DataCell(
+                    Text(user.username),
+                    onTap: () {
+                      _showEditDialog(context, user);
+                    },
+                  ),
+                  DataCell(
+                    Text(user.email),
+                    onTap: () {
+                      _showEditDialog(context, user);
+                    },
+                  ),
+                  DataCell(
+                    Text(user.age),
+                    onTap: () {
+                      _showEditDialog(context, user);
+                    },
+                  ),
+                  DataCell(
+                    Text(user
+                        .interest), // Muestra el valor de "Interest" o una cadena vacía si es nulo
+                    onTap: () {
+                      _showEditDialog(context, user);
+                    },
+                  ),
+                ],
+              );
+            }).toList(),
           ),
         ),
       ),
@@ -102,6 +116,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
     final usernameController = TextEditingController(text: user.username);
     final emailController = TextEditingController(text: user.email);
     final ageController = TextEditingController(text: user.age);
+    final interestController = TextEditingController(text: user.interest ?? '');
 
     showDialog(
       context: context,
@@ -122,6 +137,32 @@ class _UsersTablePageState extends State<UsersTablePage> {
                 controller: ageController,
                 decoration: const InputDecoration(hintText: 'Age'),
               ),
+              DropdownButtonFormField<String>(
+                value: user.interest,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    user.interest =
+                        newValue ?? ''; // Conversión de String? a String
+                  });
+                },
+                items: [
+                  'Ver TV',
+                  'Hacer deporte',
+                  'Caminar',
+                  'Shopping',
+                  'Otro'
+                ].map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
+                decoration: const InputDecoration(
+                  hintText: 'Interest',
+                ),
+              ),
             ],
           ),
           actions: <Widget>[
@@ -141,6 +182,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                 user.username = usernameController.text;
                 user.email = emailController.text;
                 user.age = ageController.text;
+                user.interest = interestController.text; // Convertir a String
                 await PrefsService.storeUsers(widget.users);
                 GlobalState.updateUserCountAndAvgAge(widget.users);
                 setState(() {});
