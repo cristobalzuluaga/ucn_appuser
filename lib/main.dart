@@ -5,7 +5,7 @@ import 'users_table_page.dart';
 import 'user_model.dart';
 import 'prefs_service.dart';
 import 'global_state.dart';
-import 'Hobbies_table_page.dart';
+import 'hobbies_table_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,90 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: UsersData(),
+      home: LoginPage(),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String? _username;
+  String? _password;
+
+  void _login() {
+    if (_username == 'admin' && _password == 'admin') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UsersData()),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Failed'),
+          content: const Text('Invalid username or password.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: const Text('Login'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _username = value;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                ),
+              ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _password = value;
+                  });
+                },
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _login,
+                child: const Text('Login'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

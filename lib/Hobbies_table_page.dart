@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'prefs_service.dart';
 import 'user_model.dart';
 import 'global_state.dart';
 
@@ -93,12 +92,11 @@ class _HobbiesTablePageState extends State<HobbiesTablePage> {
 
     for (User user in widget.users) {
       String? hobby = user.interest;
-      if (hobby != null) {
-        if (hobbyCounts.containsKey(hobby)) {
-          hobbyCounts[hobby] = hobbyCounts[hobby]! + 1;
-        } else {
-          hobbyCounts[hobby] = 1;
-        }
+
+      if (hobbyCounts.containsKey(hobby)) {
+        hobbyCounts[hobby] = hobbyCounts[hobby]! + 1;
+      } else {
+        hobbyCounts[hobby] = 1;
       }
     }
 
