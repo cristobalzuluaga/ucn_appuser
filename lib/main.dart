@@ -5,6 +5,7 @@ import 'users_table_page.dart';
 import 'user_model.dart';
 import 'prefs_service.dart';
 import 'global_state.dart';
+import 'Hobbies_table_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -59,6 +60,7 @@ class _UsersDataState extends State<UsersData> {
       const HomePage(),
       SignUpPage(users: users),
       UsersTablePage(users: users),
+      HobbiesTablePage(users: users),
     ];
 
     return Scaffold(
@@ -95,6 +97,10 @@ class _UsersDataState extends State<UsersData> {
         BottomNavigationBarItem(
           icon: Icon(Icons.table_chart),
           label: 'Users',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.sports),
+          label: 'Hobbies',
         ),
       ],
       currentIndex: _selectedIndex,

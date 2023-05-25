@@ -116,7 +116,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
     final usernameController = TextEditingController(text: user.username);
     final emailController = TextEditingController(text: user.email);
     final ageController = TextEditingController(text: user.age);
-    final interestController = TextEditingController(text: user.interest ?? '');
+    final interestController = TextEditingController(text: user.interest);
 
     showDialog(
       context: context,
