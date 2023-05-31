@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'sign_up_page.dart'; // import the sign_up_page
+import 'home_page.dart';
+import 'sign_up_page.dart';
+import 'users_table_page.dart';
+import 'user_model.dart';
+import 'prefs_service.dart';
+import 'global_state.dart';
+import 'hobbies_table_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,27 +17,119 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MyHomePage(),
+      home: LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
+  String? _username;
+  String? _password;
+
+  void _login() {
+    if (_username == 'admin' && _password == 'admin') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const UsersData()),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Failed'),
+          content: const Text('Invalid username or password.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: const Text('Login'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _username = value;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                ),
+              ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _password = value;
+                  });
+                },
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _login,
+                child: const Text('Login'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UsersData extends StatefulWidget {
+  const UsersData({Key? key}) : super(key: key);
+
+  @override
+  _UsersDataState createState() => _UsersDataState();
+}
+
+class _UsersDataState extends State<UsersData> {
+  List<User> users = [];
+
   int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = <Widget>[
-    const HomePage(), // Home Page
-    const SignUpPage(), // Register Page
-    const ConsultingPage(), // Consulting Page
-    const ModifyPage(), // Modify Page
-    const DeletePage(), // Delete Page
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsers();
+  }
+
+  void loadUsers() async {
+    List<User> storedUsers = await PrefsService.retrieveUsers();
+    setState(() {
+      users = storedUsers;
+      GlobalState.updateUserCountAndAvgAge(users);
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -41,88 +139,55 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> widgetOptions = <Widget>[
+      const HomePage(),
+      SignUpPage(users: users),
+      UsersTablePage(users: users),
+      HobbiesTablePage(users: users),
+    ];
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text('UCN App users'),
-      ),
+      appBar: _buildAppBar(),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Set the type to fixed
-        backgroundColor: Colors.blue,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Register',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: 'Consulting',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.contact_emergency),
-            label: 'Modify',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.delete),
-            label: 'Delete',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
-}
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Home Page'),
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.blue,
+      title: const Text('UCN App users'),
     );
   }
-}
 
-class ConsultingPage extends StatelessWidget {
-  const ConsultingPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Consulting Page'),
-    );
-  }
-}
-
-class ModifyPage extends StatelessWidget {
-  const ModifyPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Modify Page'),
-    );
-  }
-}
-
-class DeletePage extends StatelessWidget {
-  const DeletePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Delete Page'),
+  BottomNavigationBar _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: Colors.blue,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white70,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.school),
+          label: 'Register',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.table_chart),
+          label: 'Users',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.sports),
+          label: 'Hobbies',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
     );
   }
 }

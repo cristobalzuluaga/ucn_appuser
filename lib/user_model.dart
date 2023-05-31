@@ -1,7 +1,21 @@
-class User {
-  final String username;
-  final String email;
-  final String age;
+import 'package:json_annotation/json_annotation.dart';
 
-  User({required this.username, required this.email, required this.age});
+part 'user_model.g.dart';
+
+@JsonSerializable()
+class User {
+  String username;
+  String email;
+  String age;
+  String interest;
+
+  User(
+      {required this.username,
+      required this.email,
+      required this.age,
+      required this.interest // Actualización del constructor para incluir el interés
+      });
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 }
