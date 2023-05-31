@@ -17,6 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _ageController = TextEditingController();
+  final _interestController = TextEditingController();
   String _selectedInterest = 'Ver TV'; // Valor predeterminado seleccionado
 
   @override

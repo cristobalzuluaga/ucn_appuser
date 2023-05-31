@@ -141,7 +141,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                 value: user.interest,
                 onChanged: (String? newValue) {
                   setState(() {
-                    user.interest =
+                    interestController.text =
                         newValue ?? ''; // Conversión de String? a String
                   });
                 },
@@ -182,7 +182,9 @@ class _UsersTablePageState extends State<UsersTablePage> {
                 user.username = usernameController.text;
                 user.email = emailController.text;
                 user.age = ageController.text;
-                user.interest = interestController.text; // Convertir a String
+                user.interest = interestController.text.isEmpty
+                    ? user.interest
+                    : interestController.text; // Convertir a String
                 await PrefsService.storeUsers(widget.users);
                 GlobalState.updateUserCountAndAvgAge(widget.users);
                 setState(() {});
