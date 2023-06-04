@@ -46,41 +46,57 @@ class _HobbiesTablePageState extends State<HobbiesTablePage> {
     return Expanded(
       child: Align(
         alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text(
-                  'Hobby',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Count',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
               ),
             ],
-            rows: hobbyCounts.entries.map((entry) {
-              return DataRow(
-                cells: <DataCell>[
-                  DataCell(
-                    Text(entry.key),
-                    onTap: () {
-                      // Implement your logic here
-                    },
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const <DataColumn>[
+                DataColumn(
+                  label: Text(
+                    'Hobby',
+                    style: TextStyle(fontStyle: FontStyle.italic),
                   ),
-                  DataCell(
-                    Text(entry.value.toString()),
-                    onTap: () {
-                      // Implement your logic here
-                    },
+                ),
+                DataColumn(
+                  label: Text(
+                    'Count',
+                    style: TextStyle(fontStyle: FontStyle.italic),
                   ),
-                ],
-              );
-            }).toList(),
+                ),
+              ],
+              rows: hobbyCounts.entries.map((entry) {
+                return DataRow(
+                  cells: <DataCell>[
+                    DataCell(
+                      Text(entry.key),
+                      onTap: () {
+                        // Implement your logic here
+                      },
+                    ),
+                    DataCell(
+                      Text(entry.value.toString()),
+                      onTap: () {
+                        // Implement your logic here
+                      },
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
           ),
         ),
       ),

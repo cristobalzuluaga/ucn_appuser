@@ -68,7 +68,6 @@ class _UsersTablePageState extends State<UsersTablePage> {
                 ),
               ),
               DataColumn(
-                // Nueva columna para "Interest"
                 label: Text(
                   'Interest',
                   style: TextStyle(fontStyle: FontStyle.italic),
@@ -97,8 +96,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                     },
                   ),
                   DataCell(
-                    Text(user
-                        .interest), // Muestra el valor de "Interest" o una cadena vacía si es nulo
+                    Text(user.interest),
                     onTap: () {
                       _showEditDialog(context, user);
                     },
@@ -121,77 +119,118 @@ class _UsersTablePageState extends State<UsersTablePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Edit User'),
-          content: Column(
-            children: <Widget>[
-              TextField(
-                controller: usernameController,
-                decoration: const InputDecoration(hintText: 'Username'),
-              ),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(hintText: 'Email'),
-              ),
-              TextField(
-                controller: ageController,
-                decoration: const InputDecoration(hintText: 'Age'),
-              ),
-              DropdownButtonFormField<String>(
-                value: user.interest,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    interestController.text =
-                        newValue ?? ''; // Conversión de String? a String
-                  });
-                },
-                items: [
-                  'Ver TV',
-                  'Hacer deporte',
-                  'Caminar',
-                  'Shopping',
-                  'Otro'
-                ].map<DropdownMenuItem<String>>(
-                  (String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  },
-                ).toList(),
-                decoration: const InputDecoration(
-                  hintText: 'Interest',
-                ),
-              ),
-            ],
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Delete'),
-              onPressed: () async {
-                widget.users.remove(user);
-                await PrefsService.storeUsers(widget.users);
-                GlobalState.updateUserCountAndAvgAge(widget.users);
-                setState(() {});
-                Navigator.of(context).pop();
-              },
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(20.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    offset: Offset(0.0, 10.0),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(height: 16.0),
+                  Text(
+                    'Edit User',
+                    style:
+                        TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(height: 16.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: <Widget>[
+                        TextField(
+                          controller: usernameController,
+                          decoration:
+                              const InputDecoration(hintText: 'Username'),
+                        ),
+                        SizedBox(height: 16.0),
+                        TextField(
+                          controller: emailController,
+                          decoration: const InputDecoration(hintText: 'Email'),
+                        ),
+                        SizedBox(height: 16.0),
+                        TextField(
+                          controller: ageController,
+                          decoration: const InputDecoration(hintText: 'Age'),
+                        ),
+                        SizedBox(height: 16.0),
+                        DropdownButtonFormField<String>(
+                          value: user.interest,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              interestController.text = newValue ?? '';
+                            });
+                          },
+                          items: [
+                            'Ver TV',
+                            'Hacer deporte',
+                            'Caminar',
+                            'Shopping',
+                            'Otro'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                            hintText: 'Interest',
+                          ),
+                        ),
+                        SizedBox(height: 24.0),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        child: const Text('Delete'),
+                        onPressed: () async {
+                          widget.users.remove(user);
+                          await PrefsService.storeUsers(widget.users);
+                          GlobalState.updateUserCountAndAvgAge(widget.users);
+                          setState(() {});
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Save'),
+                        onPressed: () async {
+                          user.username = usernameController.text;
+                          user.email = emailController.text;
+                          user.age = ageController.text;
+                          user.interest = interestController.text.isEmpty
+                              ? user.interest
+                              : interestController.text;
+                          await PrefsService.storeUsers(widget.users);
+                          GlobalState.updateUserCountAndAvgAge(widget.users);
+                          setState(() {});
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.0),
+                ],
+              ),
             ),
-            TextButton(
-              child: const Text('Save'),
-              onPressed: () async {
-                user.username = usernameController.text;
-                user.email = emailController.text;
-                user.age = ageController.text;
-                user.interest = interestController.text.isEmpty
-                    ? user.interest
-                    : interestController.text; // Convertir a String
-                await PrefsService.storeUsers(widget.users);
-                GlobalState.updateUserCountAndAvgAge(widget.users);
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+          ),
         );
       },
     );
